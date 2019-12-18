@@ -7,12 +7,12 @@
 | query  | 筛选项列表 |      `Object`       |  `[]`  |  -   |
 | config | 筛选项配置 | `Array[configItem]` |  `[]`  |  -   |
 
-```json
+```js
 // config 数据结构
 configItem = {
   key: 'weeklyActiveRate',
   filterType: FilterType,
-	dataList: [FilterItem],	// 业务方自定义数据源。
+  dataList: [FilterItem],	// 业务方自定义数据源。
   ids: [String],	// 选中的key - ？ 复合类型的[[1,2],[1,2]] ？？
   callBackChannel: 'AddressBook',	// 注册页面通讯管道 (用于具有回调属性的筛选项注册响应的管道)
 }
@@ -101,7 +101,7 @@ FilterChildrenItem: {
 
 - 参数：
 
-  ```json
+  ```js
   {
     query: Object,	// 传入的query
     key: String,	// 当前筛选项配置的key
@@ -118,7 +118,7 @@ FilterChildrenItem: {
 
 - 参数
 
-  ```json
+  ```js
   {
     query: Object, // 选择完后的query
   }
@@ -132,7 +132,7 @@ FilterChildrenItem: {
 
 - 参数：
 
-  ```json
+  ```js
   {
     key: "",
     item: FilterChildrenItem,
@@ -145,7 +145,7 @@ FilterChildrenItem: {
 
 - 参数
 
-  ```json
+  ```js
   {
     key: 0, // 下标
     Item: FilterChildrenItem, // 当前选中的筛选项
@@ -158,7 +158,7 @@ FilterChildrenItem: {
 
 - 参数：
 
-  ```json
+  ```js
   {
     item: FilterItem, // 需要设置为选中状态的Item
   }
@@ -184,7 +184,7 @@ FilterChildrenItem: {
 
 - 参数
 
-  ```json
+  ```js
   {
     key: '', // 当前Item.key
     item: FilterChildrenItem,
@@ -198,7 +198,7 @@ FilterChildrenItem: {
 
 - 参数
 
-  ```json
+  ```js
   {
     index: 0, // 下标
     item: ListFilterCildrenItem, // 当前筛选项
@@ -211,7 +211,7 @@ FilterChildrenItem: {
 
 - 参数：
 
-  ```json
+  ```js
   {
     item: FilterChildrenItem, // 需要设置为选中状态的Item
   }
