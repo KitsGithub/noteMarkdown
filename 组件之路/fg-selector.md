@@ -93,9 +93,9 @@ FilterChildrenItem: {
 
 ### Events
 
-####外部方法
+#### 外部方法
 
-#####`handelQuery`
+##### `handelQuery`
 
 - 描述：改变配置项，需要一个返回值
 
@@ -112,7 +112,7 @@ FilterChildrenItem: {
   retrun query
   ```
 
-#####onSelectedFinshed
+##### `onSelectedFinshed`
 
 - 描述：统一回调seleted
 
@@ -126,7 +126,7 @@ FilterChildrenItem: {
 
 ##### 内部方法
 
-#####`select`
+##### `select`
 
 - 描述： 选中某个筛选项
 
@@ -139,7 +139,7 @@ FilterChildrenItem: {
   }
   ```
 
-#####`onCallBackSelectorItemClick`
+##### `onCallBackSelectorItemClick`
 
 - 描述：具有回调属性的选项选中
 
@@ -152,7 +152,7 @@ FilterChildrenItem: {
   }
   ```
 
-#####`setSelecotrItemSelected()`
+##### `setSelecotrItemSelected()`
 
 - 设置某个筛选项为选中状态
 
@@ -164,7 +164,7 @@ FilterChildrenItem: {
   }
   ```
 
-##<fg-selector-filter />
+## <fg-selector-filter />
 
 ### API
 
@@ -176,11 +176,11 @@ FilterChildrenItem: {
 | borderColor        | 默认边框颜色 | `String`            | `transparent` | -    |
 | checkedBorderColor | 选中边框颜色 | `String`            | `transparent` | -    |
 
-###Events
+### Events
 
 #### 内部方法
 
-#####`select`
+##### `select`
 
 - 说明：筛选项点击回调方法
 
@@ -194,7 +194,7 @@ FilterChildrenItem: {
   }
   ```
 
-#####`onCallBackFilerItemClick`
+##### `onCallBackFilerItemClick`
 
 - 说明：具有回调属性的Item方法
 
@@ -207,7 +207,7 @@ FilterChildrenItem: {
   }
   ```
 
-#####`setSelecotrItemSelected()` — `保留意见`
+##### `setSelecotrItemSelected()` — `保留意见`
 
 - 设置某个筛选项为选中状态
 
@@ -219,10 +219,10 @@ FilterChildrenItem: {
   }
   ```
 
-##<fg-selector-list-filter />
+## <fg-selector-list-filter />
 
 与`<fg-selector-filter />`类似
 
-##<fg-selector-city-filter />
+## <fg-selector-city-filter />
 
 TODO：·
