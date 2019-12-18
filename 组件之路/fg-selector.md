@@ -1,4 +1,4 @@
-##<fg-selector />
+## `<fg-selector />`
 
 ### API
 
