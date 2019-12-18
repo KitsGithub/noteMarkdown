@@ -10,11 +10,11 @@
 ```json
 // config 数据结构
 configItem = {
-  'key': 'weeklyActiveRate',
-  'filterType': FilterType,
-	'dataList': [FilterItem],	// 业务方自定义数据源。
-  'ids': [String],	// 选中的key - ？ 复合类型的[[1,2],[1,2]] ？？
-  'callBackChannel': 'AddressBook',	// 注册页面通讯管道 (用于具有回调属性的筛选项注册响应的管道)
+  key: 'weeklyActiveRate',
+  filterType: FilterType,
+	dataList: [FilterItem],	// 业务方自定义数据源。
+  ids: [String],	// 选中的key - ？ 复合类型的[[1,2],[1,2]] ？？
+  callBackChannel: 'AddressBook',	// 注册页面通讯管道 (用于具有回调属性的筛选项注册响应的管道)
 }
 
 FilterType =  'List', 'Filter', 'City'
