@@ -56,7 +56,7 @@ FilterChildrenItem: {
   	data() {
       return {
         query: {},
-  			filterConfig: [
+  	filterConfig: [
           {
             'key': 'employeeCount',
             'filterType': 'List',
