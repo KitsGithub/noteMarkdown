@@ -93,7 +93,9 @@ FilterChildrenItem: {
 
 ##### Events
 
-`handelQuery`<font style="background:white; color:black">外部方法</font>
+###### 外部方法
+
+`handelQuery` 
 
 - 描述：改变配置项，需要一个返回值
 
@@ -110,7 +112,7 @@ FilterChildrenItem: {
   retrun query
   ```
 
-`onSelectedFinshed`<font style="background:white; color:black">外部方法</font>
+`onSelectedFinshed`
 
 - 描述：统一回调seleted
 
@@ -122,7 +124,9 @@ FilterChildrenItem: {
   }
   ```
 
-`select`<font style="color:red">内部方法</font>
+###### 内部方法
+
+`select`
 
 - 描述： 选中某个筛选项
 
@@ -130,11 +134,12 @@ FilterChildrenItem: {
 
   ```json
   {
-    query: Object // 筛选后的
+    key: "",
+    item: FilterChildrenItem,
   }
   ```
 
-`onCallBackSelectorItemClick` <font style="color:red">内部方法</font>
+`onCallBackSelectorItemClick` 
 
 - 描述：具有回调属性的选项选中
 
@@ -143,11 +148,11 @@ FilterChildrenItem: {
   ```json
   {
     key: 0, // 下标
-    Item: Object, // 当前选中的筛选项
+    Item: FilterChildrenItem, // 当前选中的筛选项
   }
   ```
 
-`setSelecotrItemSelected()` <font style="color:red">内部方法</font>
+`setSelecotrItemSelected()` 
 
 - 设置某个筛选项为选中状态
 
@@ -155,7 +160,7 @@ FilterChildrenItem: {
 
   ```json
   {
-    item: SelectorItem, // 需要设置为选中状态的Item
+    item: FilterItem, // 需要设置为选中状态的Item
   }
   ```
 
