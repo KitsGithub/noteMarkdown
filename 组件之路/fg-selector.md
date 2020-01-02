@@ -1,46 +1,93 @@
-## `<fg-selector />`
+## fg-selector
 
 ### API
 
-| Props  | 说明       |        类型         | 默认值 | 版本 |
-| :----- | :--------- | :-----------------: | :----: | :--: |
-| query  | 筛选项列表 |      `Object`       |  `[]`  |  -   |
-| config | 筛选项配置 | `Array[configItem]` |  `[]`  |  -   |
+| Props | 说明       |   类型   | 默认值 | 版本 |
+| :---- | :--------- | :------: | :----: | :--: |
+| query | 筛选项列表 | `Object` |  `{}`  |  -   |
 
 ```js
 // config 数据结构
-configItem = {
-  key: 'weeklyActiveRate',
-  filterType: FilterType,
-  dataList: [FilterItem],	// 业务方自定义数据源。
-  ids: [String],	// 选中的key - ？ 复合类型的[[1,2],[1,2]] ？？
-  callBackChannel: 'AddressBook',	// 注册页面通讯管道 (用于具有回调属性的筛选项注册响应的管道)
+ConfigItem: {
+    name: String, // 选项文本
+    key: String, // 选项唯一值
+    // TAB 筛选类型：CITY = 城市选择器，DATE = 时间选择器，RADIO_LIST = 单选列表，FILTER_LIST = 复杂选择器，FILTER_RADIO = 复杂单选
+    // FILTER_LIST 筛选类型： FILTER_RADIO = 复杂选择器-单选 FILTER_CHECKBOX = 复杂选择器-多选
+    type: String,
+    config: FilterConfig, // 筛选配置
+    children: [ConfigItem],
 }
-
-FilterType =  'List', 'Filter', 'City'
-
-// 筛选Item
-FilterItem: {
-  title: '周活跃率',
-  cols: 3,			// 筛选项每行个数，default = 1 (FilterType = 'List'的时候固定为 1)
-	single: true,	// 单选or多选 defalut = true
-  disable: false, // 是否可以点击 defalut = false
-  children: [FilterChildrenItem],
+    
+// 区域选择
+RegionItem = {
+  name: String,
+  level: String, // 区域级别：province，city，district，street 依次是 省，市，行政区，片区
+  adcode: String, // 区域编码， 主键，唯一
+  adcodeCity: String, // 当前区域的上级城市编码
+  adcodeProvince: String, // 当前区域的上级省级编码
+  cityName: String, // 当前区域的上级城市名称
+  provinceName: String, // 当前区域的上级省级名称
+}
   
-  /* WARNING: 待讨论 */
-  limit: 1, 		// 多选模式下最大选择数 - 默认 Number.MAX_VALUE 
+// 筛选配置
+FilterConfig = {
+  cols: Number, // [FILTER_RADIO][FILTER_CHECKBOX] 单行展示{clos}个筛选项
+  min: Number, // [FILTER_RADIO][FILTER_CHECKBOX] 可被勾选的 checkbox 的最大数量（大于等于0）
+  max: Number, // [FILTER_CHECKBOX] 可被勾选的 checkbox 的最大数量（大于等于1）
+  channel: 'DEPARTMENT'
 }
 
-// 列表样式筛选项
-FilterChildrenItem: {
-	title: '不限',
-  selected: false,	// 选中状态 - 内部数据处理,不对外暴露
-  key: '0',
-  isCallBack: false,	// 是否具有回调属性
-}
-
-// 城市选择器
-// TODO: 
+// 例子
+config = [
+      {
+          name: '城市',
+          key: 'cityCode',
+          type: 'CITY'
+      },
+      {
+          name: '筛选',
+          key: 'filter',
+          type: 'FILTER_LIST', 
+          children: [
+              {
+                  name: '角色',
+                  key: 'roleType',
+                  type: 'RADIO_LIST',
+                  // 单选(FILTER_RADIO 默认)
+                  handelSelected: function (query, ConfigItem) {
+                      ...
+                      retrun query
+                  },
+                  // 多选(FILTER_CHECKBOX 默认)
+                  handelSelected: function (query, [ConfigItem]) {
+                      ...
+                      retrun query
+                  },
+                  handelSelected: function (query, RegionItem) {
+                      ...
+                      retrun query
+                  },                
+                  // 时间选择
+                  handelSelected: function (query, timestamp) {
+                      ...
+                      retrun query
+                  },
+                  children: [
+                      {
+                          name: '不限',
+                          key: '0',
+                      }, {
+                          name: '20人内',
+                          key: '1',
+                      }, {
+                          name: '20-50人',
+                          key: '2',
+                      },
+                  ],
+              }
+          ],
+      }
+]
 ```
 
 ```vue
@@ -55,62 +102,69 @@ FilterChildrenItem: {
   export default {
   	data() {
       return {
-        query: {},
-  	filterConfig: [
+        query: {
+          cityCode: '',
+          RoleType: '',
+        },
+        filterConfig: [
+          // 城市选择器
           {
-            'key': 'employeeCount',
-            'filterType': 'List',
-            'ids': [],
-            'dataList': [
+          	name: '城市',
+          	key: 'cityCode',
+         	  type: 'CITY'
+      		},
+          // 单选列表选择器
+          {
+            name: '选择角色',
+          	key: 'RoleType',
+          	type: 'RADIO_LIST', 
+            children: [
               {
-                title: '周活跃率',
-                children: [
-                  {
-                    title: '不限',
-                    key: '0',
-                  },
-                  {
-                    title: '低于20%',
-                    key: '1',
-                  },
-                  {
-                    title: '20%-60%',
-                    key: '2',
-                  },
-                  {
-                    title: '超过60%',
-                    key: '3',
-                  },
-                ],
-              }
-            ],
-          },
+                name: '全部',
+                key: '0',
+              },
+              {
+                name: '上级',
+                key: '1',
+              },
+              {
+                name: '员工',
+                key: '2',
+              },
+            ]
+          }
         ]
     	}
   }
 </script>
 ```
 
+### 参数说明
+
+| 参数             | 说明                                      | 值                                       | 默认值       |
+| ---------------- | ----------------------------------------- | ---------------------------------------- | ------------ |
+| `type`           | 筛选类型：                                | `CITY`/`DATE`/`RADIO_LIST`/`FILTER_LIST` | `RADIO_LIST` |
+|                  | `FILTER_LIST`又包含2个子项                | `FILTER_RADIO`/`FILTER_CHECKBOX`         | -            |
+| `FilterConfig`   | 描述筛选项配置**仅在`FILTER_LIST`下生效** |                                          |              |
+| `cols`           | 列数                                      | `Number`                                 | 3            |
+| `min`            | 最小选择数                                | `Number`                                 | 0            |
+| `max`            | 最大选择数                                | `Number`                                 | `MAX_VALE`   |
+| `channel`        | **注册通讯管道**                          | `String`                                 | -            |
+| `handelSelected` | 设置qurey变化方法                         | `Function`                               |              |
+
+- 如果是DATE的类型的时候，对应的key值应为毫秒级别的时间戳
+
 ### Events
 
 #### 外部方法
 
-##### `handelQuery`
+`setConfigs`
 
-- 描述：改变配置项，需要一个返回值
+- 描述：设置选择器的config
 
-- 参数：
-
-  ```js
-  {
-    query: Object,	// 传入的query
-    key: String,	// 当前筛选项配置的key
-    filterList: Array[DataListItem], // 当前筛选项的数据
-  }
-  
-  // 返回一个变更后的query
-  retrun query
-  ```
+```js
+this.$ref.selector.setConfigs([ConfigItem])
+```
 
 ##### `onSelectedFinshed`
 
@@ -124,105 +178,14 @@ FilterChildrenItem: {
   }
   ```
 
-##### 内部方法
+`OnChannelSelected`
 
-##### `select`
-
-- 描述： 选中某个筛选项
-
-- 参数：
-
-  ```js
-  {
-    key: "",
-    item: FilterChildrenItem,
-  }
-  ```
-
-##### `onCallBackSelectorItemClick`
-
-- 描述：具有回调属性的选项选中
+- 描述：：当配置项里设置了`channel`字段时，当这个选项被选中，会调用这个方法
 
 - 参数
 
-  ```js
+  ```json
   {
-    key: 0, // 下标
-    Item: FilterChildrenItem, // 当前选中的筛选项
+    channel: 'DEPARTMENT'
   }
   ```
-
-##### `setSelecotrItemSelected()`
-
-- 设置某个筛选项为选中状态
-
-- 参数：
-
-  ```js
-  {
-    item: FilterItem, // 需要设置为选中状态的Item
-  }
-  ```
-
-## <fg-selector-filter />
-
-### API
-
-| PropsPorps         | 说明         | 类型                | 默认值        | 版本 |
-| ------------------ | ------------ | ------------------- | ------------- | ---- |
-| list               | 筛选项列表   | `Array[FilterItem]` | `[]`          | -    |
-| backgroundColor    | 默认背景颜色 | `String`            | `#FFFFFF`     | -    |
-| checkedColor       | 选中背景颜色 | `String`            | `#111111`     | -    |
-| borderColor        | 默认边框颜色 | `String`            | `transparent` | -    |
-| checkedBorderColor | 选中边框颜色 | `String`            | `transparent` | -    |
-
-### Events
-
-#### 内部方法
-
-##### `select`
-
-- 说明：筛选项点击回调方法
-
-- 参数
-
-  ```js
-  {
-    key: '', // 当前Item.key
-    item: FilterChildrenItem,
-    checkedList: [FilterChildrenItem], // 当前筛选项所有选中的列表
-  }
-  ```
-
-##### `onCallBackFilerItemClick`
-
-- 说明：具有回调属性的Item方法
-
-- 参数
-
-  ```js
-  {
-    index: 0, // 下标
-    item: ListFilterCildrenItem, // 当前筛选项
-  }
-  ```
-
-##### `setSelecotrItemSelected()` — `保留意见`
-
-- 设置某个筛选项为选中状态
-
-- 参数：
-
-  ```js
-  {
-    item: FilterChildrenItem, // 需要设置为选中状态的Item
-  }
-  ```
-
-## <fg-selector-list-filter />
-
-与`<fg-selector-filter />`类似
-
-## <fg-selector-city-filter />
-
-TODO：·
