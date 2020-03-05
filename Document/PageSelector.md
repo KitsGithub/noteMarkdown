@@ -10,7 +10,8 @@
 
   ```json
   {
-    type: String
+    type: String,	 // 配置的唯一标识
+    query: Object, // 跳转参数
   }
   ```
 
@@ -47,8 +48,8 @@
 import PageSelector from 'xxx/PageSelector'
 
 function selecteTeamList() {
-	PageSelector.goToPageSelect()
-    .then({ result: '', data: {object} } => {
+	PageSelector.goToPageSelect('XX', { id: '123' })
+    .then({ result, data } => {
     if (result === 'SUCCESS') {
     	// do something ...  
     } else if (result === 'CANCEL') {

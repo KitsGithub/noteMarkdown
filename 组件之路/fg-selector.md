@@ -3,12 +3,13 @@
 - 日志
   - 新增`ALL_REGION`类型，筛选任意级别的省市区
   - `FilterConfig`新增 `isDisable` 配置项， `ConfigItem`新增`rule`字段补全反向映射关系
-- 完成基础功能
-  
+  - 完成基础功能
 - TODO
+  - [ ] `ConfigItem`没有默认值，默认值不应高亮
   - [ ] `isDisable`仅在`TAB`下生效，未适用到其他子集Item
   - [ ] `FilterConfig`的`channel`字段仅适用到`FILTER_CHECKBOX`下使用，且一个选择器仅能配置一个`channel`字段
-  - [ ] `ConfigItem`新增的`rule`字段仅在`FILTER_LIST`下生效
+  - [ ] `ConfigItem`新增的`rule`字段仅在`FILTER_LIST`下生效，未扩展到其他筛选项
+  - [ ] 在安卓下，`fg-selector`的 `destory`方法不生效
 
 ### API
 
