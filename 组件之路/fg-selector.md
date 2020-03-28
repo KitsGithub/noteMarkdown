@@ -1,6 +1,7 @@
 ## fg-selector
 
 - 日志
+  - `FilterConfig`新增`enableSeparator`配置某个选项下是否展示分割线
   - 新增`ALL_REGION`类型，筛选任意级别的省市区
   - `FilterConfig`新增 `isDisable` 配置项， `ConfigItem`新增`rule`字段补全反向映射关系
   - 完成基础功能
@@ -72,6 +73,7 @@ FilterConfig = {
   min: Number, // [FILTER_RADIO][FILTER_CHECKBOX] 可被勾选的 checkbox 的最大数量（大于等于0）
   max: Number, // [FILTER_CHECKBOX] 可被勾选的 checkbox 的最大数量（大于等于1）
   channel: 'DEPARTMENT',
+	enableSeparator: true, // 是否展示分割线
   isDisable: Function isDeisabel(query) {	// 配置当前筛选项在什么条件下不可选中
     ...
     retrun true
@@ -81,19 +83,19 @@ FilterConfig = {
 
 ### 参数说明
 
-| 参数             | 说明                                      | 值                                                    | 默认值       |
-| ---------------- | ----------------------------------------- | ----------------------------------------------------- | ------------ |
-| `type`           | 筛选类型：                                | `CITY`/`ALL_REGION`/`DATE`/`RADIO_LIST`/`FILTER_LIST` | `RADIO_LIST` |
-|                  | `FILTER_LIST`又包含3个子项                | `FILTER_RADIO`/`FILTER_CHECKBOX`/`FILTER_CUSTOM`      | -            |
-| `FilterConfig`   | 描述筛选项配置**仅在`FILTER_LIST`下生效** |                                                       |              |
-| `cols`           | 列数                                      | `Number`                                              | 3            |
-| `min`            | 最小选择数                                | `Number`                                              | 0            |
-| `max`            | 最大选择数                                | `Number`                                              | `MAX_VALE`   |
-| `isDisable`      | 当前tab是否可选状态                       | `Fuction`                                             |              |
-| `channel`        | **注册通讯管道**                          | `String`                                              | -            |
-| `handelSelected` | 设置qurey变化方法                         | `Function` 返回变化后的 `query`                       | -            |
-| `handleDisable`  | 配置选择器是否可以点击状态                | `Function` 返回 `true`/`false`                        | -            |
-|                  |                                           |                                                       |              |
+| 参数              | 说明                                      | 值                                                    | 默认值       |
+| ----------------- | ----------------------------------------- | ----------------------------------------------------- | ------------ |
+| `type`            | 筛选类型：                                | `CITY`/`ALL_REGION`/`DATE`/`RADIO_LIST`/`FILTER_LIST` | `RADIO_LIST` |
+|                   | `FILTER_LIST`又包含3个子项                | `FILTER_RADIO`/`FILTER_CHECKBOX`/`FILTER_CUSTOM`      | -            |
+| `FilterConfig`    | 描述筛选项配置**仅在`FILTER_LIST`下生效** |                                                       |              |
+| `cols`            | 列数                                      | `Number`                                              | 3            |
+| `min`             | 最小选择数                                | `Number`                                              | 0            |
+| `max`             | 最大选择数                                | `Number`                                              | `MAX_VALE`   |
+| `isDisable`       | 当前tab是否可选状态                       | `Fuction`                                             |              |
+| `channel`         | **注册通讯管道**                          | `String`                                              | -            |
+| `handelSelected`  | 设置qurey变化方法                         | `Function` 返回变化后的 `query`                       | -            |
+| `handleDisable`   | 配置选择器是否可以点击状态                | `Function` 返回 `true`/`false`                        | -            |
+| `enableSeparator` | 配置分割线样式                            | `BOOL`                                                | `false`      |
 
 - 如果是DATE的类型的时候，对应的key值应为毫秒级别的时间戳
 - 当传入Tab的类型为 `ALL_REGION`时，对应`query`的字段应为一个对象，包含 `adcode`和`level`两个字段。选择完毕后会返回一个`RegionItem`对象

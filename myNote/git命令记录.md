@@ -31,6 +31,16 @@ git pop
 git stash apply stash@{index} 
 ```
 
+删除暂存
+
+```js
+// 删除所有
+git stash clear
+
+// 删除某个
+git stash drop stash@{index}
+```
+
 
 
 ## 放弃本地修改内容
