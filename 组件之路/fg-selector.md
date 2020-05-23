@@ -23,7 +23,7 @@
 ConfigItem: {
     name: String, // 选项文本
     key: String, // 选项唯一值
-    // TAB 筛选类型：CITY = 城市选择器，ALL_REGION = 筛选区域，DATE = 时间选择器，RADIO_LIST = 单选列表，FILTER_LIST = 复杂选择器
+    // TAB 筛选类型：CITY = 城市选择器，ALL_REGION = 筛选区域，DATE = 时间选择器，DEPARTMENT 部门选择器，RADIO_LIST = 单选列表，FILTER_LIST = 复杂选择器
     // FILTER_LIST 筛选类型： FILTER_RADIO = 复杂选择器-单选 FILTER_CHECKBOX = 复杂选择器-多选 FILTER_CUSTOM 自定义选择器
     type: String,
     config: FilterConfig, // 筛选配置
@@ -74,6 +74,7 @@ FilterConfig = {
   max: Number, // [FILTER_CHECKBOX] 可被勾选的 checkbox 的最大数量（大于等于1）
   channel: 'DEPARTMENT',
 	enableSeparator: true, // 是否展示分割线
+  dateFormatter: "HH-MM-DD",
   isDisable: Function isDeisabel(query) {	// 配置当前筛选项在什么条件下不可选中
     ...
     retrun true
@@ -188,6 +189,9 @@ let dateConfig = {
   name: '选择日期',
   key: 'date',
   type: 'DATE',
+  config: {
+    dateFormatter: 'YYYY年MM月',
+  },
 }
 ```
 

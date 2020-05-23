@@ -1,10 +1,26 @@
 # HTML容器 fg-web-view
 
+### Methods
 
+### setHeight
 
+- 说明：Weex 设置 WebView 容器高度，单位 px。不设置的话，默认无高度。
 
+  ```js
+  // Weex
+  @param {Number} value 容器高度
+  vm.$refs.FjkWebView.setHeight(300)
+  ```
 
-### 方法
+### setWidth
+
+- 说明：Weex 设置 WebView 容器宽度，单位 px。不设置的话，默认满宽
+
+  ```js
+  // Weex
+  @param {Number} value 容器宽度
+  vm.$refs.FjkWebView.setWidth(750)
+  ```
 
 #### setContent
 
@@ -16,15 +32,28 @@
   this.$ref.webView.setContent(`<html>...</html>`)
   ```
 
-#### loadURL
+##### 使用方式
 
-- 定向webView的url *这个方法会覆盖setContent的内容，为第一优先级*
+```js
+// Weex
+// 只需要设置body内容，预设的html模版会内置Echart、Promise
+vm.$refs.FjkWebView.setContent(`
+    <p>Hello world!</p>
+    <fg-script>...</fg-script>
+`)
+```
+
+#### setContentWithURL
+
+- 定向webView的url
 
   ```js
-  this.$ref.webView.loadURL(`http://www.baidu.com`)
+  this.$ref.webView.setContentWithURL(`http://www.baidu.com`)
   ```
 
-  
+
+
+*组件内部网页加载生命周期*
 
 #### onWebViewStartLoad
 
@@ -92,48 +121,15 @@
   </script>
   ```
 
-  
-
- 
-
-#### 使用方式
-```js
-// Weex
-vm.$refs.FjkWebView.setContent(`
-    <html>
-    	<head>
-    		<meta charset="utf-8">
-    		<title>FjkWebView Test</title>
-    		<meta name="viewport" content="width=device-width, initial-scale=1">
-    	</head>
-    	<body>
-		<button onclick="click()">Hello world!</button>
-    	</body>
-		<fg-script>
-			document.addEventListener('chartReload', function (e) {
-			  // e.data 保存着此次事件携带的数据，即 e.data === options
-			});
-			function click(){
-			  native.fireWeexEvent('foo', { data: 'event datail'})
-			}	
-		</fg-script>
-    </html>
-`)
-
-// 或者只设置body内的值，原生会自动拼接<html>标签
-vm.$refs.FjkWebView.setContent(`
-    <p>Hello world!</p>
-`)
-```
-
-
 
 
 
 #### 注意事项
-
 由于 [Vue 的安全机制](https://cn.vuejs.org/v2/guide/security.html#HTML-%E5%86%85%E5%AE%B9)，无法在Vue中直接注入html，会被框架转义。除非通过 Dom 的一些操作注入，但是 Weex 也不支持 Dom。  
-所以在 `fg-web-view` 的 content 中我们使用 `<fg-script>...</fg-script>` 来绕考 Vue 对 html文本的转码。同时原生也需要在接收到 content 时，将 `<fg-script>...</fg-script>` 替换为  `<script>...</script>`
+所以在 `fg-web-view` 的 content 中我们使用 `<fg-script>...</fg-script>` 来绕开 Vue 对 html文本的转码。同时原生也需要在接收到 content 时，将 `<fg-script>...</fg-script>` 替换为  `<script>...</script>`
+
+#### 预设 HTML 模版
+http://192.168.2.100/geek/trident-weex/blob/2bc3de8f60163b0270a3b8d47e4d13ef0ca9ab68/webViewTemplate.html 
 
 ### dispatchEvent
 
@@ -142,42 +138,104 @@ Weex 通知 Web的方式。Weex 向 web 容器广播全局事件
 
 #### 参数
 ```
-/**
-* dispatchEvent
-* @param {String} eventName 事件名
-* @param {Object} eventData 事件携带的数据
-*/
-```
-
-#### 实现细节
-原生层通过对Web容器注入以下JS逻辑，实现 Weex 向 web 容器广播全局事件
-```js
-document.dispatchEvent(new CustomEvent(${eventName}, { 'data': ${data} }))
+@param {String} eventName 事件名
+@param {Object} eventData 事件携带的数据
 ```
 
 #### 使用方式
+> 假设场景：Weex端向Web端派发了一个名为`foo`的事件，并且携带数据 `{ bar: 'event datail'}`
+
 ```js
 // Weex
-vm.$refs.FjkWebView.dispatchEvent('chartReload', options)
+vm.$refs.FjkWebView.dispatchEvent('foo', { bar: 'event datail'})
 ```
 ```js
 // Web
-document.addEventListener('chartReload', function (e) {
-  // e.data 保存着此次事件携带的数据，即 e.data === options
+document.addEventListener('foo', function (e) {
+  // e.data 保存着此次事件携带的数据
+  console.log(e.data) // { bar: 'event datail'}
 });
 ```
+```js
+// 原生层通过对Web容器注入以下JS逻辑，实现 Weex 向 web 容器广播全局事件
+(function(){var __internalEvent__ = new Event("foo");__internalEvent__.data = { bar: "event datail"};document.dispatchEvent(__internalEvent__);__internalEvent__ = null;})()
+```
 
-## web 网页与 Weex 的通讯
-> web 通过全局对象 `FJK` 访问原生方法
+## Web 网页与 Weex 的通讯
+
+### 全局对象 FJK
+
+#### 说明
+Web 调用原生方法，必须通过 WebView 全局对象 `FJK`，全局对象 `FJK` 由原生在加载WebView之前注入，所有原生方法都挂载在上面。
+
+#### Android实现细节
+```js
+// 原生通过初始化JavaScript实例跟web通讯，T端JavaScript实例命名为 __FjkTridentWebViewJavascriptBridge__
+// 原生初始化 Webview 之前前注入封装 FJK 的代码
+// 由于 Web 和原生通讯本质都是通过 JSON 字符串，所有 FJK 在调用原生方法前，都需要将参数格式化成字符串，原生接收参数之后需要反序列化。
+// 以下为部分核心代码，详细实现细节，见预设的HTML模版
+(function (window) {
+  const _nativeBridge = window.__FjkTridentWebViewJavascriptBridge__
+
+  function fireWeexEvent(eventName, eventData) {
+    _nativeBridge.fireWeexEvent(JSON.stringify(eventName), JSON.stringify(eventData))
+  }
+
+  window.FJK = {
+    fireWeexEvent: fireWeexEvent,
+  }
+})(window)
+```
+
+### setHeight
+
+#### 说明
+Web 设置 WebView 容器高度，单位 px。不设置的话，默认无高度。
+
+#### 参数
+```
+@param {Number} value 容器高度
+```
+
+#### 使用方式
+```js
+// Web
+FJK.setHeight(300)
+```
+
+### setWidth
+
+#### 说明
+web 设置 WebView 容器宽度，单位 px。不设置的话，默认满宽
+
+#### 参数
+```
+@param {Number} value 容器宽度
+```
+
+#### 使用方式
+```js
+// Web
+FJK.setWidth(750)
+```
 
 ### fireWeexEvent
 
+#### 说明
+Web 通知 Weex 的方式。Web 向 Weex 组件广播事件
+
+#### 参数
+```
+@param {String} eventName 事件名
+@param {Object} eventData 事件携带的数据
+```
+
 #### 使用方式
+```js
+// Web
+FJK.fireWeexEvent('foo', { data: 'event datail'})
+```
 ```html
 // Weex
 <fjk-web-view ref="FjkWebView" @foo="handleWebviewEvent"> </fjk-web-view>
-```
-```js
-// Web 会有全局对象 FJK
-FJK.fireWeexEvent('foo', { data: 'event datail'})
 ```
