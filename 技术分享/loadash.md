@@ -16,27 +16,26 @@
 <script>
 /*
 result = {
-	result: [
-		{
-			"text": "标题",
-			"isHot": true,
-			"createTime": 1590204594598,
-			"cityCode": 10000,
+  result: [
+    {
+      "text": "标题",
+      "isHot": true,
+      "createTime": 1590204594598,
+      "cityCode": 10000,
       "id" : '123',
-		}
-	], // 默认是空数组
-	nextId: "1", // 如果没有下次请求，则无nextId字段
+    }], // 默认是空数组
+    nextId: "1", // 如果没有下次请求，则无nextId字段
 }
 query = {
-	keyword: '',
-	nextId: '',
+  keyword: '',
+  nextId: '',
 }
 */
 servce.requireNetwork(query)
-	.then((result) => {
-  	// do something ...
+  .then((result) => {
+    // do something ...
   
-	})
+  })
 </script>
 ```
 
@@ -49,15 +48,15 @@ servce.requireNetwork(query)
 ```vue
 <script>
 servce.requireNetwork(query)
-	.then((result) => {
+  .then((result) => {
     // 一般写法
-  	let nextId = result.nextId
+    let nextId = result.nextId
     // nextId 的值可能是: undefined, "1"
     
     // lodash写法
     let nextId = _.get(result, "nextId", "")
     // nextId 的值可能是: "", "1"
-	})
+  })
 </script>
 ```
 
@@ -73,17 +72,17 @@ servce.requireNetwork(query)
 servce.requireNetwork(query)
   .then((result) => {
     let resultList = _.get(result, "result", [])
-   	for (let i = 0; i < resultList.length; i++) {
-      let object = resultList[i]
-      // 一般写法
-      object.text = `**${object.text}**`
-      // lodash写法1
-      _.assign(object, { text: `**${object.text}**` })  // 会改变原有对象
-      // lodash写法2
-      let newObject = _.assign({}, object, { text: `**${object.text}**` }) // 不会改变原有对象
-    }
-		this.dataSourceList = resultList
-	})
+     for (let i = 0; i < resultList.length; i++) {
+     let object = resultList[i]
+     // 一般写法
+     object.text = `**${object.text}**`
+     // lodash写法1
+     _.assign(object, { text: `**${object.text}**` })  // 会改变原有对象
+     // lodash写法2
+     let newObject = _.assign({}, object, { text: `**${object.text}**` }) // 不会改变原有对象
+   }
+   this.dataSourceList = resultList
+})
 </script>
 ```
 
@@ -103,7 +102,7 @@ servce.requireNetwork(query)
       object = _.assign({}, object, { text: `**${object.text}**` })
     }
   
-  	// lodash写法
+    // lodash写法
     let resultList = _.get(result, "result", [])
   	resultList = _.map(resultList, (object, index) => {
       return _.assign({}, object, { text: `**${object.text}**` })
@@ -116,14 +115,14 @@ servce.requireNetwork(query)
     
     // 链式
     const resultList = _.chain(result)
-  		.get("result", [])
-  		.map((object) => {
+      .get("result", [])
+      .map((object) => {
       	return _.assign({}, object, { text: `**${object.text}**` })
-    	})
-			.value()
+      })
+      .value()
     
-		this.dataSourceList = resultList
-	})
+      this.dataSourceList = resultList
+})
 </script>
 ```
 
@@ -207,7 +206,7 @@ servce.requireNetwork(query)
     let resultList = _.map(_.get(result, "result", []), (object) => {
       return _.assign({}, object, { text: `**${object.text}**` })
     })
-		// 按创建时间倒序(冒泡)
+    // 按创建时间倒序(冒泡)
     for (var i = 0; i < resultList.length - 1; i++) {
         for (var j = 0; j < resultList.length - 1 - i; j++) {
             if (resultList[j].createTime > resultList[j + 1].createTime) {
@@ -218,11 +217,11 @@ servce.requireNetwork(query)
         }
     }
   
-  	// lodash 写法
-  	// 倒序
-  	resultList = _.orderBy(resultList, "createTime", 'desc')
-  	// 顺序
-  	resultList = _.orderBy(resultList, "createTime", 'asc')
+    // lodash 写法
+    // 倒序
+    resultList = _.orderBy(resultList, "createTime", 'desc')
+    // 顺序
+    resultList = _.orderBy(resultList, "createTime", 'asc')
     
     this.dataSourceList = hotList
   })
@@ -289,7 +288,7 @@ servce.requireNetwork(query)
         })
       }
     }
-	  /* cityArray = [
+    /* cityArray = [
       {
         "cityCode": "1",
         "children": [
@@ -318,13 +317,13 @@ servce.requireNetwork(query)
       }
     ]
     */
-  	// 每个城市组再排序时间
+    // 每个城市组再排序时间
     cityArray = _.map(cityArray, (cityObject) =>{
       return _.orderBy(cityObject.children, 'createTime', 'asc')
     })
-  	resultList = cityArray
-  	/*
-  	resultList = [
+    resultList = cityArray
+    /*
+    resultList = [
       [
         {"cityCode": "1","createTime": 2},
         {"cityCode": "1","createTime": 4}
@@ -334,34 +333,33 @@ servce.requireNetwork(query)
         {"cityCode": "2","createTime": 3}
       ]
     ]
-  	*/
+    */
   	
   
-  	// lodash 写法
-  	let cityArray = _.groupBy(resultList, 'cityCode')
+    // lodash 写法
+    let cityArray = _.groupBy(resultList, 'cityCode')
     /* cityArray = {
         "1":[{"cityCode":"1","createTime":4},{"cityCode":"1","createTime":2}],
         "2":[{"cityCode":"2","createTime":3},{"cityCode":"2","createTime":1}]
     	}
     */
-  	cityArray = _.map(cityArray, (cityObject) =>{
+    cityArray = _.map(cityArray, (cityObject) =>{
       return _.orderBy(cityObject, 'createTime', 'asc')
     })
-  	/* cityArray = [
-  		[
-  			{"cityCode":"1","createTime":2},
-  			{"cityCode":"1","createTime":4}
-  		],
-  		[
-  			{"cityCode":"2","createTime":1},
-  			{"cityCode":"2","createTime":3}
-  		]
+    /* cityArray = [
+  	[
+  	  {"cityCode":"1","createTime":2},
+  	  {"cityCode":"1","createTime":4}
+  	],
+  	[
+  	  {"cityCode":"2","createTime":1},
+  	  {"cityCode":"2","createTime":3}
   	]
-  	*/
-  	resultList = cityArray
-    
-		this.dataSourceList = resultList
-	})
+    ]
+    */
+    resultList = cityArray
+    this.dataSourceList = resultList
+})
 </script>
 ```
 
@@ -374,31 +372,31 @@ servce.requireNetwork(query)
 servce.requireNetwork(query)
   .then((result) => {
     // 综合上面所有需求
-		let resultList = _.chain(result)
-			.get("result", [])
-  		.map((object) => {
+    let resultList = _.chain(result)
+      .get("result", [])
+      .map((object) => {
       	return _.assign({}, object, { text: `**${object.text}**` })
       })
-  		.groupBy('cityCode')
-  		.map((cityObject) => {
+      .groupBy('cityCode')
+      .map((cityObject) => {
         return _.orderBy(cityObject, 'createTime', 'asc')
       })
       .value()
   	
     /*
     resultList = [
-  		[
-  			{"cityCode":"1","createTime":2},
-  			{"cityCode":"1","createTime":4}
-  		],
-  		[
-  			{"cityCode":"2","createTime":1},
-  			{"cityCode":"2","createTime":3}
-  		]
+  	[
+  	  {"cityCode":"1","createTime":2},
+  	  {"cityCode":"1","createTime":4}
+  	],
+  	[
+  	  {"cityCode":"2","createTime":1},
+  	  {"cityCode":"2","createTime":3}
   	]
+    ]
     */ 
   
-	})
+})
 </script>
 ```
 
@@ -427,16 +425,16 @@ function promis1() {
 // 使用
 // fjkmodule.showLoading()
 promis1()
-	.then((success) => {
-  	// success
-	})
-	.catch((error) => {
-  	// error
-	})
-	.finally(() => {
-  	// 常用于loading框的销毁
-  	// fjkmodule.hideLoading()
-	})
+  .then((success) => {
+    // success
+  })
+  .catch((error) => {
+    // error
+  })
+  .finally(() => {
+    // 常用于loading框的销毁
+    // fjkmodule.hideLoading()
+  })
 ```
 
 
@@ -519,10 +517,10 @@ function promis2() {
 // 慎用
 promis1()
   .then((res1) => return promis2())
-	.then((res2) => {
-    // 
+  .then((res2) => {
+    // do somthing 
   })
-	.catch((error) => {
+  .catch((error) => {
     // error
   })
 
