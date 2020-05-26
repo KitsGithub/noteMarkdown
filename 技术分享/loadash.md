@@ -402,3 +402,129 @@ servce.requireNetwork(query)
 </script>
 ```
 
+
+
+## Promise 介绍
+
+> 坑点：weex不支持 `await`、`async`  
+
+### 实例方法 `new Promise`
+
+```js
+function promis1() {
+  return new Promise((resolve, reject) => {
+    // dosomting ...
+    // success
+    if (success) {
+      successData = {}, // 成功后需要返回的数据结构
+      resolve(successData)
+    } else {
+      reject(new Error({ message: 'errorMessage' }))
+    }
+  })
+}
+
+// 使用
+// fjkmodule.showLoading()
+promis1()
+	.then((success) => {
+  	// success
+	})
+	.catch((error) => {
+  	// error
+	})
+	.finally(() => {
+  	// 常用于loading框的销毁
+  	// fjkmodule.hideLoading()
+	})
+```
+
+
+
+### 并行
+
+#### `Promise.all([])`
+
+> promise数组顺序与返回result的顺序是一致的  
+
+```js
+// 基本语法
+Promise.all([
+  promise1,
+  promise2,
+]).then((result) => {
+  // do somthing
+  // result = [ promiseResult1, promiseResult2 ]
+}).catch((error) => {
+  // 其中一个promise失败了都会进这个方法
+}).finally(() => {
+  // do something
+})
+
+// 等价于
+Promise.all([
+  promise1,
+  promise2,
+]).then(([ promiseResult1, promiseResult2 ]) => {})
+```
+
+
+
+#### `Promise.props({})`
+
+> 定义的promise结构与返回的数据结构是一致的  
+
+```js
+Promise.props({
+  promiseResult1 : promise1,
+  promiseResult2 : promise2,
+}).then((result) => {
+  // do something
+  // result = { promiseResult1, promiseResult2 }
+}).catch((error) => {
+  // 其中一个promise失败了都会进这个方法
+}).finally(() => {
+  // do something
+})
+
+// 等价于
+Promise.props({
+  promiseResult1 : promise1,
+  promiseResult2 : promise2,
+}).then(({ promiseResult1, promiseResult2 }) => {})
+```
+
+
+
+### 串行（不建议）
+
+```js
+// 方法2依赖于方法1的结果
+function promis1() {
+  return new Promise((resolve, reject) => {
+    setTimeout(()=>{
+        resolve(1)
+    },100)}),
+  })
+}
+
+function promis2() {
+  return new Promise((resolve, reject) => {
+    setTimeout(()=>{
+        resolve(2)
+    },200)}),
+  })
+}
+
+// 慎用
+promis1()
+  .then((res1) => return promis2())
+	.then((res2) => {
+    // 
+  })
+	.catch((error) => {
+    // error
+  })
+
+```
+

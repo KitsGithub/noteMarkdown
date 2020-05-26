@@ -82,7 +82,144 @@
 | tab       | `String` | Tab名称:`HOME`首页... |
 | badgeText | `String` | 待处理数              |
 # 其他桥
+
+### socialShare
+
+第三方分享
+- 框架：`Weex` `Webview`
+- 客户端及版本：`T2.5+`
+- 功能：第三方社交分享，分享后需要将结果通过 `callback` 将 `ShareResultType` 回调
+- 参数：
+  - `ShareType data`
+- 响应：无
+
+```json
+ShareType {
+  // 分享平台枚举
+  platform: Enum { "WECHAT_SESSION", "WECHAT_TIMELINE", "WECHAT_FAVORITE" , "WXWORK", "QQ", "SYSTEM_SHARE" }, 
+  // 分享类型枚举
+  type: Enum{ "message", "image",  "music", "video", "web" , "miniProgram" }, 
+  shareContent: `ShareContent`
+}
+
+ShareResultType {
+  status: Number, // 0-取消 / 1-成功，无法取得真实结果的视为 1
+}
+```
+
+#### 分享内容字段描述
+
+##### 分享文本
+
+| 字段    | 类型   | 含义               | 备注 |
+| ------- | ------ | ------------------ | ---- |
+| message | String | 发送消息的文本内容 |      |
+
+```json
+shareContent = {
+  message: '分享的文本内容'
+}
+```
+
+
+
+##### 分享图片
+
+| 字段     | 类型   | 含义       | 备注                   |
+| -------- | ------ | ---------- | ---------------------- |
+| imageUrl | String | 分享的图片 | 图片内容大小不超过10MB |
+
+```json
+shareContent = {
+  imageUrl: 'http://xxxx.png'
+}
+```
+
+
+
+##### 分享网页
+
+| 字段        | 类型   | 含义          | 备注                   |
+| ----------- | ------ | ------------- | ---------------------- |
+| webpageUrl  | String | 网页url(必填) | 限制长度不超过10KB     |
+| title       | String | 消息标题      | 限制长度不超过512Bytes |
+| description | String | 描述内容      | 限制长度不超过1KB      |
+| imageUrl    | String | 缩略图        | 限制内容大小不超过32KB |
+
+```json
+shareContent = {
+  webpageUrl = 'https://www.baidu.com',
+  title: '标题',
+  description: '描述',
+  imageUrl: 'http://xxx.png' // 缩略图
+}
+```
+
+
+
+##### 分享小程序
+
+| 字段        | 类型   | 含义                          | 备注               |
+| ----------- | ------ | ----------------------------- | ------------------ |
+| userName    | String | 小程序的原始id/userName(必填) |                    |
+| webpageUrl  | String | 兼容低版本的网页链接          | 限制长度不超过10KB |
+| path        | String | 小程序的页面路径              |                    |
+| title       | String | 小程序标题                    |                    |
+| description | String | 小程序描述                    |                    |
+
+```json
+shareContent = {
+  userName: '111',
+  webpageUrl: 'https://www.baidu.com',
+  path: './home',
+  title: '小程序标题',
+  description: '小程序描述',
+}
+```
+
+
+
+##### 分享音乐
+
+| 字段                | 类型   | 含义                                | 备注               |
+| ------------------- | ------ | ----------------------------------- | ------------------ |
+| musicUrl            | String | 音频网页的URL地址（必填）           | 限制长度不超过10KB |
+| musicLowBandUrl     | String | 供低带宽环境下使用的音频网页URL地址 |                    |
+| musicDataUrl        | String | 音频数据的URL地址                   |                    |
+| musicLowBandDataUrl | String | 供低带宽环境下使用的音频数据URL地址 |                    |
+
+```json
+shareContent = {
+  musicUrl: 'https://music.xxx.mp3',
+  musicLowBandUrl: '',
+  musicDataUrl: '',
+  musicLowBandDataUrl: '',
+}
+```
+
+
+
+##### 分享视频
+
+| 字段            | 类型   | 含义                           | 备注               |
+| --------------- | ------ | ------------------------------ | ------------------ |
+| videoUrl        | String | 视频链接(必填)                 | 限制长度不超过10KB |
+| videoLowBandUrl | String | 供低带宽的环境下使用的视频链接 | 限制长度不超过10KB |
+
+```json
+shareContent = {
+  videoUrl: 'https://video.xxx.mp4',
+  videoLowBandUrl: ''
+}
+```
+
+
+
+参考: [android](https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317340&token=&lang=zh_CN)
+参考: [iOS](https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317332&token=&lang=zh_CN)
+
 ## getAddressBookData
+
 > 获取通讯录数据
 
 - 参数:  无
@@ -223,25 +360,6 @@
 |               | `hdImageDataUrl`      | `String` |      |      | **仅支持iOS**,小程序新版本的预览图二进制数据，6.5.9及以上版本微信客户端支持 |
 |               | `miniprogramType`     | `String` |      |      | 可选值: 正式: WXMiniProgramTypeRelease, 测试:WXMiniProgramTypeTest, 体验:WXMiniProgramTypePreview |
 |               | `withShareTicket`     | `Boolen` |      |      | 是否使用带shareTicket的分享                                  |
-
-参考: [android](https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317340&token=&lang=zh_CN)
-参考: [iOS](https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317332&token=&lang=zh_CN)
-
-------
-
-## wxworkShare
-> 分享到企业微信  
-
-##### 参数  
-
-| 字段    | 类型   | 默认值 | 必填 | 含义                                                   |
-| ------- | ------ | ------ | ---- | ------------------------------------------------------ |
-| type    | String | -      | Y    | 分享类型，取值范围：`TEXT`, `LINK`, `FILE`, `LOCATION` |
-| title   | String | -      | N    | 分享的标题or文本                                       |
-| summary | String | -      | N    | 分享的副标题                                           |
-| url     | String | -      | N    | 分享的链接                                             |
-
-
 
 ------
 
