@@ -60,7 +60,7 @@ servce.requireNetwork(query)
 </script>
 ```
 
-
+  
 
 ### `_.assign(object, [sources])`
 
@@ -86,7 +86,7 @@ servce.requireNetwork(query)
 </script>
 ```
 
-
+  
 
 ### `_.map(collection, [iteratee=_.identity])`
 
@@ -402,9 +402,7 @@ servce.requireNetwork(query)
 
 
 
-## Promise 介绍
-
-> 坑点：weex不支持 `await`、`async`  
+## Promise 介绍 
 
 ### 实例方法 `new Promise`
 
@@ -525,4 +523,6 @@ promis1()
   })
 
 ```
+
+参考：[lodash文档](https://www.lodashjs.com/docs/latest)
 
