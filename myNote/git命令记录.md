@@ -64,6 +64,19 @@ git reset --soft HEAD^
 
 
 
+## 合并某个提交
+
+```objective-c
+// 合并某个提交
+git cherry-pick 65ad383c977acd6c7e
+  
+// 如果文件有冲突，cherry-pick 会中断
+你解决冲突后，使用git add添加冲突文件，使用git cherry-pick --continue完成cherry-pick操作。
+或者使用git cherry-pick --abort中断操作。
+```
+
+
+
 ## 分支
 
 ### 1. 创建本地分支

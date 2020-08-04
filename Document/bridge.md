@@ -11,6 +11,7 @@
 
 ## 实时: Native -> Weex
 #### onNativeStatusUpdate
+
 > Native -> Weex
 > 通用事件: 当客户端状态发生变化 / 客户端主动给weex传输数据
 > 实现方案: Native给App中所有的weex实例, 发送weex支持的`globalEvent`事件
@@ -605,17 +606,34 @@ Weex中的使用方式，float scale = (float)originWidth / 750; originWidth为�
 取不到返回null
 
 ## getCurrentLocation
+
 > 获取附近一个建筑的定位信息
 ##### 返回参数
-| 字段       | 类型    | 默认值               | 说明            |
-| ---------- | ------- | -------------------- | --------------- |
-| status     | Boolean | 无                   | 是否定位成功    |
-| coordinate | Arry    | [latitude,longitude] | 坐标点          |
-| amapId     | String  | ''                   | 高德地图定位uid |
-| name       | String  | ''                   | 定位建筑名称    |
-| address    | String  | ''                   | 定位建筑地址    |
+| 字段       | 类型    | 默认值               | 说明             |
+| ---------- | ------- | -------------------- | ---------------- |
+| status     | Boolean | 无                   | 是否定位成功     |
+| coordinate | Arry    | [latitude,longitude] | 坐标点           |
+| amapId     | String  | ''                   | 高德地图定位uid  |
+| name       | String  | ''                   | 定位建筑名称     |
+| address    | String  | ''                   | 定位建筑地址     |
+| cityCode   | String  | ''                   | 当前所在城市编码 |
+
+```json
+// 返回的数据结构
+{
+  status: true,
+  coordinate: [11,22],
+  amapId: 'aaa',
+  name: '南方海信大厦',
+  address: '创业路XX号',
+  cityCode: '100'
+}
+```
+
+
 
 ## getWebHost
+
 > 获取H5访问地址host,由于T端H5一般都是B端页面
 
 - 回调
